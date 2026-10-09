@@ -142,4 +142,29 @@ public class AtividadeController {
         atividadeService.concluir(id);
         return "redirect:/atividades";
     }
+
+    @GetMapping("/usuario/{id}")
+    public String listarPorUsuario(@PathVariable String id,
+                                   HttpSession session,
+                                   Model model) {
+
+        Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
+
+        if (logado == null || logado.getRole() != Role.ADMIN) {
+            return "redirect:/home";
+        }
+
+        Usuario aluno = usuarioService.buscarPorId(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+        List<Atividade> atividades = atividadeService.listarPorUsuario(aluno);
+
+        model.addAttribute("usuarioLogado", logado);
+        model.addAttribute("aluno", aluno);
+        model.addAttribute("manha", atividades.stream().filter(a -> "MANHA".equals(a.getPeriodo())).toList());
+        model.addAttribute("tarde", atividades.stream().filter(a -> "TARDE".equals(a.getPeriodo())).toList());
+        model.addAttribute("noite", atividades.stream().filter(a -> "NOITE".equals(a.getPeriodo())).toList());
+
+        return "atividades/listar";
+    }
 }

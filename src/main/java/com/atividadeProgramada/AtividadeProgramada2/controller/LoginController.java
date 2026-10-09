@@ -14,6 +14,11 @@ import com.atividadeProgramada.AtividadeProgramada2.service.UsuarioService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
+import com.atividadeProgramada.AtividadeProgramada2.entity.Atividade;
+import com.atividadeProgramada.AtividadeProgramada2.entity.Role;
+import com.atividadeProgramada.AtividadeProgramada2.service.AtividadeService;
+import java.util.List;
+
 
 @Controller
 @RequestMapping()
@@ -21,6 +26,7 @@ import lombok.AllArgsConstructor;
 public class LoginController {
 
     private final UsuarioService usuarioService;
+    private final AtividadeService atividadeService;
 
     // Abre a página de login no navegador
     @GetMapping("/login")
@@ -47,7 +53,6 @@ public class LoginController {
         model.addAttribute("erro", "Email ou senha inválidos");
         return "login";
     }
-
     // Abre a página home apenas se o usuário estiver logado na sessão
     @GetMapping("/home")
     public String paginaHome(HttpSession session, Model model) {
@@ -57,9 +62,24 @@ public class LoginController {
             // Sessão vazia = não logado, manda de volta pro login
             return "redirect:/login";
         }
-
         // Passa o usuário para o html via model
         model.addAttribute("usuarioLogado", usuarioLogado);
+
+        if (usuarioLogado.getRole() == Role.ADMIN) {
+            // ADMIN vê lista de usuários
+            List<Usuario> usuarios = usuarioService.listarUsuarios()
+                    .stream()
+                    .filter(u -> u.getRole() != Role.ADMIN)
+                    .toList();
+            model.addAttribute("usuarios", usuarios);
+        } else {
+            // USER vê suas atividades separadas por período
+            List<Atividade> atividades = atividadeService.listarPorUsuario(usuarioLogado);
+            model.addAttribute("manha", atividades.stream().filter(a -> "MANHA".equals(a.getPeriodo())).toList());
+            model.addAttribute("tarde", atividades.stream().filter(a -> "TARDE".equals(a.getPeriodo())).toList());
+            model.addAttribute("noite", atividades.stream().filter(a -> "NOITE".equals(a.getPeriodo())).toList());
+        }
+
         return "home"; // aponta para templates/home.html
     }
 

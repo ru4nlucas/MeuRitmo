@@ -45,7 +45,13 @@ public class UsuarioService {
         Usuario usuario = new Usuario();
         usuario.setEmail(email);
         usuario.setSenha(senha);
-        usuario.setRole(Role.USUARIO);
+        if(usuarioRepository.count() == 0){
+            usuario.setRole(Role.ADMIN);
+        }
+        else {
+            usuario.setRole(Role.USUARIO);
+        }
+
         return usuarioRepository.save(usuario);
     }
 

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Nova Atividade - Meu Ritmo</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('/images/fundo3.jpg');
+            background-repeat: repeat;
+            background-size: 1000px;
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        .header {
+            background: white;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-logo {
+            color: #003087;
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-voltar {
+            background: white;
+            border: 1.5px solid #ddd;
+            border-radius: 20px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 18px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-voltar:hover { background: #f5f5f5; }
+
+        .btn-sair {
+            background: white;
+            border: 1.5px solid #ddd;
+            border-radius: 20px;
+            color: #555;
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 18px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-sair:hover { background: #f5f5f5; }
+
+        .main {
+            padding: 28px 24px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card-admin {
+            background: white;
+            border-radius: 16px;
+            padding: 32px 28px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+        }
+
+        .page-title {
+            color: #003087;
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .page-subtitle {
+            color: #7a8bad;
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            background: #f5f9ff;
+            border: 2px solid #b3d9f5;
+            border-radius: 12px;
+            color: #333;
+            font-size: 14px;
+            padding: 11px 14px;
+            margin-bottom: 18px;
+            outline: none;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #00aeef;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .btn-salvar {
+            width: 100%;
+            background: #f5a623;
+            border: none;
+            border-radius: 24px;
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            padding: 14px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        .btn-salvar:hover { background: #e09415; }
+
+        .btn-cancelar {
+            width: 100%;
+            background: white;
+            border: 1.5px solid #ddd;
+            border-radius: 24px;
+            color: #555;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .btn-cancelar:hover { background: #f5f5f5; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="/home" class="header-logo">🧩 Meu Ritmo</a>
+    <div class="header-right">
+        <a href="/home" class="btn-voltar">← Voltar</a>
+        <a href="/logout" class="btn-sair">↪ Sair</a>
+    </div>
+</div>
+
+<div class="main">
+    <div class="card-admin">
+        <p class="page-title" th:text="${atividade.id} ? 'Editar Atividade' : 'Nova Atividade'"></p>
+        <p class="page-subtitle">Monte uma atividade para o dia de um usuário.</p>
+
+        <form th:action="${atividade.id} ? '/atividades/atualizar' : '/atividades/salvar'"
+              th:object="${atividade}" method="post">
+
+            <!-- ID oculto para edição -->
+<!--            <input type="hidden" th:field="*{id}" />-->
+            <input type="hidden" th:if="${atividade.id != null}" th:field="*{id}" />
+
+            <!-- USUÁRIO -->
+            <label>Usuário</label>
+            <select name="usuarioId">
+                <option value="" disabled selected>Selecione um usuário</option>
+                <option th:each="u : ${usuarios}"
+                        th:value="${u.id}"
+                        th:text="${u.email}"
+                        th:selected="${atividade.usuario != null and atividade.usuario.id == u.id}">
+                </option>
+            </select>
+
+            <!-- NOME -->
+            <label>Nome da atividade</label>
+            <input type="text" th:field="*{nome}" placeholder="Ex.: Escovar os dentes" />
+
+            <!-- HORA E PERÍODO -->
+            <div class="row">
+                <div>
+                    <label>Hora</label>
+                    <input type="time" th:field="*{hora}" />
+                </div>
+                <div>
+                    <label>Momento</label>
+                    <select th:field="*{periodo}">
+                        <option value="">Automático pelo horário</option>
+                        <option value="MANHA">🌅 Manhã</option>
+                        <option value="TARDE">☀️ Tarde</option>
+                        <option value="NOITE">🌙 Noite</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- DESCRIÇÃO -->
+            <label>Descrição (opcional)</label>
+            <textarea th:field="*{descricao}" placeholder="Descreva a atividade..."></textarea>
+
+            <!-- DATA -->
+            <label>Data (opcional)</label>
+            <input type="date" th:field="*{data}" />
+
+            <button type="submit" class="btn-salvar"
+                    th:text="${atividade.id} ? 'Salvar alterações' : 'Criar atividade'">
+            </button>
+        </form>
+
+        <a href="/home" class="btn-cancelar">Cancelar</a>
+    </div>
+</div>
+
+</body>
+</html>
