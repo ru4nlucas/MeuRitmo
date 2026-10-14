@@ -76,4 +76,7 @@ public class AtividadeService {
        atividade.setConcluida(true);
        atividadeRepository.save(atividade);
     }
+    public void deletarPorId(String id) {
+        atividadeRepository.deleteById(id);
+    }
 }

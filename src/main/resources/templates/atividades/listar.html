@@ -296,7 +296,7 @@
                     <span th:if="${a.concluida}" class="badge-concluida">✅ Concluída!</span>
                     <div th:if="${!a.concluida}" class="acoes">
                         <a th:href="@{/atividades/editar/{id}(id=${a.id})}" class="btn-editar">✏ Editar</a>
-                        <a th:href="@{/atividades/deletar/{nome}(nome=${a.nome})}" class="btn-deletar">🗑 Deletar</a>
+                        <a th:href="@{/atividades/deletar/{id}(id=${a.id})}" class="btn-deletar">🗑 Deletar</a>
                     </div>
                 </div>
                 <p th:if="${#lists.isEmpty(manha)}" class="sem-atividades">Nenhuma atividade</p>
@@ -317,7 +317,7 @@
                     <span th:if="${a.concluida}" class="badge-concluida">✅ Concluída!</span>
                     <div th:if="${!a.concluida}" class="acoes">
                         <a th:href="@{/atividades/editar/{id}(id=${a.id})}" class="btn-editar">✏ Editar</a>
-                        <a th:href="@{/atividades/deletar/{nome}(nome=${a.nome})}" class="btn-deletar">🗑 Deletar</a>
+                        <a th:href="@{/atividades/deletar/{id}(id=${a.id})}" class="btn-deletar">🗑 Deletar</a>
                     </div>
                 </div>
                 <p th:if="${#lists.isEmpty(tarde)}" class="sem-atividades">Nenhuma atividade</p>
@@ -338,7 +338,7 @@
                     <span th:if="${a.concluida}" class="badge-concluida">✅ Concluída!</span>
                     <div th:if="${!a.concluida}" class="acoes">
                         <a th:href="@{/atividades/editar/{id}(id=${a.id})}" class="btn-editar">✏ Editar</a>
-                        <a th:href="@{/atividades/deletar/{nome}(nome=${a.nome})}" class="btn-deletar">🗑 Deletar</a>
+                        <a th:href="@{/atividades/deletar/{id}(id=${a.id})}" class="btn-deletar">🗑 Deletar</a>
                     </div>
                 </div>
                 <p th:if="${#lists.isEmpty(noite)}" class="sem-atividades">Nenhuma atividade</p>

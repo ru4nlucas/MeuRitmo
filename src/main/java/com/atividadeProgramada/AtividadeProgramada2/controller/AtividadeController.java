@@ -78,7 +78,8 @@ public class AtividadeController {
 
         atividade.setUsuario(aluno);
         atividadeService.salvar(atividade);
-        return "redirect:/atividades";
+      //  return "redirect:/atividades";
+        return "redirect:/atividades/usuario/" + usuarioId; // ← mudança aqui
     }
 
     @GetMapping("/editar/{id}")
@@ -113,6 +114,7 @@ public class AtividadeController {
 
         if (logado == null || logado.getRole() != Role.ADMIN) {
             return "redirect:/atividades";
+
         }
 
         Usuario aluno = usuarioService.buscarPorId(usuarioId)
@@ -120,20 +122,24 @@ public class AtividadeController {
 
         atividade.setUsuario(aluno);
         atividadeService.atualizar(atividade);
-        return "redirect:/atividades";
+        //return "redirect:/atividades";
+        return "redirect:/atividades/usuario/" + usuarioId; // ← mudança aqui
     }
 
-    @GetMapping("/deletar/{nome}")
-    public String deletar(@PathVariable String nome, HttpSession session) {
+    @GetMapping("/deletar/{id}")
+    public String deletar(@PathVariable String id, HttpSession session) {
 
         Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
 
         if (logado == null || logado.getRole() != Role.ADMIN) {
-            return "redirect:/atividades";
+            return "redirect:/home";
         }
 
-        atividadeService.deletar(nome);
-        return "redirect:/atividades";
+        Atividade atividade = atividadeService.buscarPorId(id);
+        String usuarioId = atividade.getUsuario().getId();
+
+        atividadeService.deletarPorId(id);
+        return "redirect:/atividades/usuario/" + usuarioId;
     }
     @PostMapping("/concluir/{id}")
     public String concluir(@PathVariable String id, HttpSession session){
