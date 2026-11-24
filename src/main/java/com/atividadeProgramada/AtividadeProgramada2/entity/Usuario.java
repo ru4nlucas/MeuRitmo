@@ -7,6 +7,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,4 +34,9 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Role role = Role.USUARIO;
+
+    // responsável (ADMIN) dono desta conta; fica vazio nas contas de ADMIN
+    @ManyToOne
+    @JoinColumn(name = "responsavel_id")
+    private Usuario responsavel;
 }
