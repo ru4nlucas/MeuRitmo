@@ -205,7 +205,7 @@
                 <option th:each="u : ${usuarios}"
                         th:value="${u.id}"
                         th:text="${u.email}"
-                        th:selected="${atividade.usuario != null and atividade.usuario.id == u.id}">
+                        th:selected="${u.id == usuarioIdSelecionado or (atividade.usuario != null and atividade.usuario.id == u.id)}">
                 </option>
             </select>
 

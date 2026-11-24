@@ -43,24 +43,44 @@ public class AtividadeController {
         model.addAttribute("usuarioLogado", logado);
         return "atividades/listar";
     }
+//
+//    @GetMapping("/nova")
+//    public String formularioCriar(HttpSession session, Model model) {
+//        Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
+//
+//        if (logado == null || logado.getRole() != Role.ADMIN) {
+//            return "redirect:/atividades";
+//        }
+//
+//        List<Usuario> usuarios = usuarioService.listarUsuarios()
+//                .stream()
+//                .filter(u -> u.getRole() != Role.ADMIN)
+//                .toList();
+//
+//        model.addAttribute("atividade", new Atividade());
+//        model.addAttribute("usuarios", usuarios);
+//        model.addAttribute("usuarioIdSelecionado", usuarioId); // ← passa o id
+//        return "atividades/formulario";
+//    }
+@GetMapping("/nova")
+public String formularioCriar(HttpSession session, Model model,
+                              @RequestParam(required = false) String usuarioId) {
+    Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
 
-    @GetMapping("/nova")
-    public String formularioCriar(HttpSession session, Model model) {
-        Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
-
-        if (logado == null || logado.getRole() != Role.ADMIN) {
-            return "redirect:/atividades";
-        }
-
-        List<Usuario> usuarios = usuarioService.listarUsuarios()
-                .stream()
-                .filter(u -> u.getRole() != Role.ADMIN)
-                .toList();
-
-        model.addAttribute("atividade", new Atividade());
-        model.addAttribute("usuarios", usuarios);
-        return "atividades/formulario";
+    if (logado == null || logado.getRole() != Role.ADMIN) {
+        return "redirect:/home";
     }
+
+    List<Usuario> usuarios = usuarioService.listarUsuarios()
+            .stream()
+            .filter(u -> u.getRole() != Role.ADMIN)
+            .toList();
+
+    model.addAttribute("atividade", new Atividade());
+    model.addAttribute("usuarios", usuarios);
+    model.addAttribute("usuarioIdSelecionado", usuarioId);
+    return "atividades/formulario";
+}
 
     @PostMapping("/salvar")
     public String salvar(@ModelAttribute Atividade atividade,
@@ -146,7 +166,7 @@ public class AtividadeController {
         Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
         if(logado == null)return "redirect:/login";
         atividadeService.concluir(id);
-        return "redirect:/atividades";
+        return "redirect:/home";
     }
 
     @GetMapping("/usuario/{id}")
@@ -172,5 +192,19 @@ public class AtividadeController {
         model.addAttribute("noite", atividades.stream().filter(a -> "NOITE".equals(a.getPeriodo())).toList());
 
         return "atividades/listar";
+    }
+    @GetMapping("/reabrir/{id}")
+    public String reabrir(@PathVariable String id, HttpSession session) {
+        Usuario logado = (Usuario) session.getAttribute("usuarioLogado");
+
+        if (logado == null || logado.getRole() != Role.ADMIN) {
+            return "redirect:/home";
+        }
+
+        Atividade atividade = atividadeService.buscarPorId(id);
+        String usuarioId = atividade.getUsuario().getId();
+
+        atividadeService.reabrir(id);
+        return "redirect:/atividades/usuario/" + usuarioId;
     }
 }

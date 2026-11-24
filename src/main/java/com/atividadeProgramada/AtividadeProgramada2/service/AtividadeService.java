@@ -2,6 +2,7 @@ package com.atividadeProgramada.AtividadeProgramada2.service;
 
 import com.atividadeProgramada.AtividadeProgramada2.entity.Usuario;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.AllArgsConstructor;
 
@@ -13,6 +14,7 @@ import com.atividadeProgramada.AtividadeProgramada2.entity.Atividade;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class AtividadeService {
 
     private final AtividadeRepository atividadeRepository;
@@ -78,5 +80,13 @@ public class AtividadeService {
     }
     public void deletarPorId(String id) {
         atividadeRepository.deleteById(id);
+    }
+    public void reabrir(String id) {
+        Atividade atividade = buscarPorId(id);
+        atividade.setConcluida(false);
+        atividadeRepository.save(atividade);
+    }
+    public void deletarPorUsuario(Usuario usuario) {
+        atividadeRepository.deleteByUsuario(usuario);
     }
 }

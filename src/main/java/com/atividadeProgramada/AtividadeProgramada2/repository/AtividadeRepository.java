@@ -13,5 +13,6 @@ public interface AtividadeRepository extends JpaRepository<Atividade, String> {
     void deleteByNome(String nome);
 
     List<Atividade> findByUsuario(Usuario usuario);
+    void deleteByUsuario(Usuario usuario);
 }
 

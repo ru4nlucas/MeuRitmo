@@ -126,6 +126,22 @@
 
         .btn-action:hover { background: #e09415; }
 
+        .btn-reabrir {
+            background: #e6f9f0;
+            border: none;
+            border-radius: 10px;
+            color: #2d6a4f;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 12px;
+            cursor: pointer;
+            text-decoration: none;
+            flex: 1;
+            text-align: center;
+        }
+
+        .btn-reabrir:hover { background: #c8f0dc; }
+
         /* 3 COLUNAS */
         .colunas {
             display: grid;
@@ -277,7 +293,8 @@
     <p class="page-subtitle">Você está vendo as atividades deste usuário.</p>
 
     <!-- BOTÃO NOVA ATIVIDADE -->
-    <a th:href="@{/atividades/nova}" class="btn-action">+ Nova Atividade</a>
+<!--    <a th:href="@{/atividades/nova}" class="btn-action">+ Nova Atividade</a>-->
+        <a th:href="@{/atividades/nova(usuarioId=${aluno.id})}" class="btn-action">+ Nova Atividade</a>
     </div>
     <!-- 3 COLUNAS -->
     <div class="colunas">
@@ -294,7 +311,8 @@
                     <div class="atividade-nome" th:text="${a.nome}"></div>
                     <div class="atividade-hora">🕐 <span th:text="${a.hora}"></span></div>
                     <span th:if="${a.concluida}" class="badge-concluida">✅ Concluída!</span>
-                    <div th:if="${!a.concluida}" class="acoes">
+                    <div class="acoes">
+                        <a th:if="${a.concluida}" th:href="@{/atividades/reabrir/{id}(id=${a.id})}" class="btn-reabrir">🔄 Reabrir</a>
                         <a th:href="@{/atividades/editar/{id}(id=${a.id})}" class="btn-editar">✏ Editar</a>
                         <a th:href="@{/atividades/deletar/{id}(id=${a.id})}" class="btn-deletar">🗑 Deletar</a>
                     </div>
@@ -315,7 +333,8 @@
                     <div class="atividade-nome" th:text="${a.nome}"></div>
                     <div class="atividade-hora">🕐 <span th:text="${a.hora}"></span></div>
                     <span th:if="${a.concluida}" class="badge-concluida">✅ Concluída!</span>
-                    <div th:if="${!a.concluida}" class="acoes">
+                    <div class="acoes">
+                        <a th:if="${a.concluida}" th:href="@{/atividades/reabrir/{id}(id=${a.id})}" class="btn-reabrir">🔄 Reabrir</a>
                         <a th:href="@{/atividades/editar/{id}(id=${a.id})}" class="btn-editar">✏ Editar</a>
                         <a th:href="@{/atividades/deletar/{id}(id=${a.id})}" class="btn-deletar">🗑 Deletar</a>
                     </div>
@@ -336,7 +355,8 @@
                     <div class="atividade-nome" th:text="${a.nome}"></div>
                     <div class="atividade-hora">🕐 <span th:text="${a.hora}"></span></div>
                     <span th:if="${a.concluida}" class="badge-concluida">✅ Concluída!</span>
-                    <div th:if="${!a.concluida}" class="acoes">
+                    <div class="acoes">
+                        <a th:if="${a.concluida}" th:href="@{/atividades/reabrir/{id}(id=${a.id})}" class="btn-reabrir">🔄 Reabrir</a>
                         <a th:href="@{/atividades/editar/{id}(id=${a.id})}" class="btn-editar">✏ Editar</a>
                         <a th:href="@{/atividades/deletar/{id}(id=${a.id})}" class="btn-deletar">🗑 Deletar</a>
                     </div>

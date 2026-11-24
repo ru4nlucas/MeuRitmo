@@ -107,6 +107,37 @@
         .btn-action:hover { background: #e09415; }
 
         /* CARDS DE USUÁRIO */
+        .usuario-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+            text-decoration: none;
+        }
+
+        .usuario-acoes {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-user-editar, .btn-user-excluir {
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 8px 14px;
+            text-decoration: none;
+        }
+
+        .btn-user-editar { background: #e8f4ff; color: #00aeef; }
+        .btn-user-editar:hover { background: #d0eaff; }
+
+        .btn-user-excluir { background: #fff0f5; color: #e91e8c; }
+        .btn-user-excluir:hover { background: #ffd6ea; }
+
+
+
+
+
         .usuario-card {
             background: white;
             border-radius: 16px;
@@ -312,21 +343,26 @@
         </div>
     </div>
 
-        <div th:each="u, stat : ${usuarios}">
-            <a th:href="@{/atividades/usuario/{id}(id=${u.id})}" class="usuario-card">
-                <div class="usuario-avatar"
-                     th:classappend="${stat.index % 4 == 0} ? 'avatar-azul' :
-                                         (${stat.index % 4 == 1} ? 'avatar-rosa' :
-                                         (${stat.index % 4 == 2} ? 'avatar-verde' : 'avatar-amarelo'))">
-                    😊
-                </div>
-                <div class="usuario-info">
-                    <div class="usuario-email" th:text="${u.email}"></div>
-                    <div class="usuario-role">Usuário</div>
-                </div>
-                <span class="usuario-arrow">›</span>
-            </a>
+    <div th:each="u, stat : ${usuarios}" class="usuario-card">
+        <a th:href="@{/atividades/usuario/{id}(id=${u.id})}" class="usuario-link">
+            <div class="usuario-avatar"
+                 th:classappend="${stat.index % 4 == 0} ? 'avatar-azul' :
+                             (${stat.index % 4 == 1} ? 'avatar-rosa' :
+                             (${stat.index % 4 == 2} ? 'avatar-verde' : 'avatar-amarelo'))">
+                😊
+            </div>
+            <div class="usuario-info">
+                <div class="usuario-email" th:text="${u.email}"></div>
+                <div class="usuario-role">Usuário</div>
+            </div>
+        </a>
+
+        <div class="usuario-acoes">
+            <a th:href="@{/usuario/editar/{id}(id=${u.id})}" class="btn-user-editar">✏ Editar</a>
+            <a th:href="@{/usuario/excluir/{id}(id=${u.id})}" class="btn-user-excluir"
+               onclick="return confirm('Excluir este usuário e todas as atividades dele?')">🗑 Excluir</a>
         </div>
+    </div>
 
 
     <!-- HOME DO USER -->
